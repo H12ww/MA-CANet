@@ -132,7 +132,3 @@ Event types in Dataset①: `HT` (clean ground truth), `SM` (mild artifacts), `LM
 | η (%) — Residual artifact ratio | Lower is better |
 
 Statistical significance tested via Wilcoxon signed-rank test (paired t-test as alternative).
-
-## Reproducibility
-
-All random seeds are fixed to `42`. Experiments are fully configured via `configs/default.yaml` with no hardcoded hyperparameters in source code.
