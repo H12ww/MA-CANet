@@ -1,0 +1,114 @@
+# ============================================================
+# MA-CANet: fNIRS Motion Artifact Removal
+# Default Configuration
+# ============================================================
+
+# --- Paths ---
+paths:
+  raw_data: data/raw
+  bids_dataset: data/raw/BIDSdata_fNIRS_motion_artifact
+  physiobank_dataset: data/raw/motion-artifact-contaminated-fnirs-and-eeg-data
+  processed: data/processed
+  semi_synthetic: data/semi_synthetic
+  checkpoints: outputs/checkpoints
+  logs: outputs/logs
+  figures: outputs/figures
+
+# --- Data ---
+data:
+  sampling_rate: 10          # Hz (BIDS dataset)
+  n_channels: 16             # per subject
+  wavelengths: [760, 850]    # nm
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  split_by: subject          # leave-subject-out
+  cv_folds: 5
+  input_length: 512          # samples (~51.2s at 10Hz)
+
+# --- Semi-Synthetic Data Generation ---
+semi_synthetic:
+  n_samples: 5000
+  snr_range: [-10, 10]       # dB
+  spike_prob: 0.3            # probability of spike artifact per segment
+  shift_prob: 0.3            # probability of baseline shift per segment
+  spike_duration: [0.1, 0.5] # seconds
+  shift_duration: [1.0, 5.0] # seconds
+  hrf:
+    time_to_peak: 6.0        # seconds
+    duration: 16.5            # seconds
+    amplitude_range: [0.5, 2.0]  # relative units
+
+# --- Data Augmentation ---
+augmentation:
+  enabled: true
+  time_stretch: 0.1          # ±10%
+  amplitude_scale: [0.8, 1.2]
+  gaussian_noise_std: 0.01
+  time_shift: 10             # max shift in samples
+  prob: 0.5                  # probability of applying each augmentation
+
+# --- Model ---
+model:
+  name: macanet
+  input_length: 512
+  in_channels: 1
+  ms_kernels: [3, 7, 15, 31]
+  ms_out_channels: 32
+  encoder_channels: [32, 64, 128, 128]
+  se_reduction: 8
+  dropout: 0.3
+  use_skip_connections: true
+
+# --- Training ---
+training:
+  optimizer: AdamW
+  lr: 0.001
+  weight_decay: 0.0001
+  scheduler: CosineAnnealingLR
+  scheduler_T_max: 200
+  epochs: 200
+  batch_size: 32
+  early_stopping_patience: 20
+  gradient_clip: 1.0
+  num_workers: 0
+  pin_memory: false
+
+# --- Loss ---
+loss:
+  mse_weight: 1.0
+  freq_weight: 0.1
+  ssim_weight: 0.1
+
+# --- Evaluation ---
+evaluation:
+  metrics: [delta_snr, rmse, pearson_r, ssim, artifact_ratio]
+  stat_test: paired_ttest     # or wilcoxon
+  significance_level: 0.05
+
+# --- Ablation Configurations ---
+ablation:
+  A1:  # Base encoder-decoder only
+    use_msconv: false
+    use_se: false
+    loss_type: mse_only
+  A2:  # + Multi-scale Conv
+    use_msconv: true
+    use_se: false
+    loss_type: mse_only
+  A3:  # + SE Attention
+    use_msconv: true
+    use_se: true
+    loss_type: mse_only
+  A4:  # + Hybrid Loss
+    use_msconv: true
+    use_se: true
+    loss_type: hybrid
+  A5:  # Full MA-CANet (= default)
+    use_msconv: true
+    use_se: true
+    loss_type: hybrid
+
+# --- Misc ---
+seed: 42
+device: auto                  # auto, cuda, cpu

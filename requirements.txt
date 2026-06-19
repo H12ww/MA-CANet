@@ -1,0 +1,15 @@
+# MA-CANet fNIRS 运动伪影去除 — 核心依赖
+# GPU 版 PyTorch (CUDA 12.8)；CPU 用户请替换为 torch==2.9.1（无 +cu128 后缀）
+torch==2.9.1+cu128
+numpy==2.4.4
+scipy==1.17.1
+scikit-learn==1.8.0
+matplotlib==3.10.9
+PyYAML==6.0.3
+mne==1.12.1
+h5py==3.16.0
+PyWavelets==1.9.0
+wfdb==4.3.1
+pandas==3.0.3
+tqdm==4.67.3
+tensorboard==2.20.0
