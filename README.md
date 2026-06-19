@@ -1,6 +1,6 @@
 # MA-CANet: Multi-scale Attention-enhanced Convolutional Network for fNIRS Motion Artifact Removal
 
-A deep learning framework for removing motion artifacts from functional near-infrared spectroscopy (fNIRS) signals, targeting SCI Q2+ publication in *Biomedical Signal Processing and Control* or *Frontiers in Neuroscience*.
+A deep learning framework for removing motion artifacts from functional near-infrared spectroscopy (fNIRS) signals.
 
 ## Overview
 
