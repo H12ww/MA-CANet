@@ -16,15 +16,6 @@ MA-CANet is benchmarked against six baseline methods (bandpass filter, wavelet t
 
 **Requirements**: Python 3.10+, CUDA-capable GPU recommended.
 
-```bash
-# Create conda environment
-conda create -n fnirs python=3.10
-conda activate fnirs
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
 Key dependencies: PyTorch 2.x, MNE-NIRS, MNE-Python, SciPy, PyWavelets, h5py, wfdb, NumPy, Matplotlib, Seaborn, PyYAML, TensorBoard.
 
 ## Directory Structure
